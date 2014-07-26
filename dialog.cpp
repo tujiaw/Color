@@ -1,14 +1,118 @@
+
 #include "dialog.h"
 #include "ui_dialog.h"
+#include <QtWidgets>
+#include <QScreen>
 
 Dialog::Dialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Dialog)
 {
     ui->setupUi(this);
+    timer_ = new QTimer(this);
+    connect(timer_, SIGNAL(timeout()), this, SLOT(slotTimer()));
 }
 
 Dialog::~Dialog()
 {
     delete ui;
 }
+
+
+void Dialog::on_leRgb_returnPressed()
+{
+    bool isOk = false;
+    QString str = ui->leRgb->text();
+    QStringList strList = str.split(',');
+    if (strList.count() >= 3) {
+        int r = strList[0].toInt();
+        int g = strList[1].toInt();
+        int b = strList[2].toInt();
+        if ((r <= 255 && r>= 0) && (g <= 255 && g >= 0) && (b <= 255 && b >= 0)) {
+            isOk = true;
+            QColor clr(r, g, b);
+            ui->leHex->setText(clr2hex(clr));
+            clrShow(clr);
+        }
+    }
+
+    if (!isOk) {
+        QMessageBox::information(this, tr("show"), tr("RGB(255,255,255),格式错误!"));
+    }
+}
+
+void Dialog::on_leHex_returnPressed()
+{
+    QString str = ui->leHex->text();
+    if (str.count() == 6) {
+        QColor clr("#" + str);
+        int r, g, b;
+        clr.getRgb(&r, &g, &b);
+        ui->leRgb->setText(QString("%1,%2,%3").arg(r).arg(g).arg(b));
+        clrShow(clr);
+    } else {
+        QMessageBox::information(this, tr("show"), tr("#ffffff,格式错误!"));
+    }
+}
+
+QString Dialog::clr2rgb(QColor clr)
+{
+    int r, g, b;
+    clr.getRgb(&r, &g, &b);
+    QString xx =  QString("%1,%2,%3").arg(r).arg(g).arg(b);
+    return xx;
+}
+
+QString Dialog::clr2hex(QColor clr)
+{
+    int r, g, b;
+    clr.getRgb(&r, &g, &b);
+    QString xx = QString("").sprintf("%02x%02x%02x", r, g, b);
+    return xx;
+}
+
+void Dialog::clrShow(QColor clr, const QString &str)
+{
+    int r, g, b;
+    clr.getRgb(&r, &g, &b);
+    QColor fontClr(255-r, 255-g, 255-b);
+    if (str.isEmpty()) {
+        ui->laColor->setText("RGB(" + clr2rgb(clr) + ")" + " #" + clr2hex(clr));
+    } else {
+        ui->laColor->setText(str);
+    }
+    ui->laColor->setStyleSheet(QString("color:#%1;background-color:#%2").arg(clr2hex(fontClr)).arg(clr2hex(clr)));
+}
+
+void Dialog::on_pbPickColorStart_clicked()
+{
+    ui->leRgb->setEnabled(false);
+    ui->leHex->setEnabled(false);
+    timer_->start(100);
+}
+
+void Dialog::on_pbPickColorStop_clicked()
+{
+    ui->leRgb->setEnabled(true);
+    ui->leHex->setEnabled(true);
+    timer_->stop();
+}
+
+void Dialog::slotTimer()
+{
+    QPoint pos = QCursor::pos();
+    QScreen *screen = QGuiApplication::primaryScreen();
+    QPixmap pixmap = screen->grabWindow(QApplication::desktop()->winId(), pos.x(), pos.y(), 1, 1);
+    if (!pixmap.isNull()) {
+        QImage image = pixmap.toImage();
+        if (!image.isNull()) {
+            if (image.valid(0, 0)) {
+                QColor clr = image.pixel(0, 0);
+                ui->leRgb->setText(clr2rgb(clr));
+                ui->leHex->setText(clr2hex(clr));
+                clrShow(clr, QString("X:%1, Y:%2").arg(pos.x()).arg(pos.y()));
+            }
+        }
+    }
+}
+
