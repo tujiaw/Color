@@ -114,5 +114,19 @@ void Dialog::slotTimer()
             }
         }
     }
+
+    QPixmap magnifyPixmap = screen->grabWindow(QApplication::desktop()->winId(), pos.x() - 20, pos.y() - 20, 40, 40);
+    if (!magnifyPixmap.isNull()) {
+        int magnifySize = 160;
+        magnifyPixmap = magnifyPixmap.scaled(magnifySize, magnifySize);
+        QPainter painter(&magnifyPixmap);
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(QColor("#696969"));
+        painter.drawRect(0, magnifySize/2, magnifySize, 3);
+        painter.drawRect(magnifySize/2, 0, 3, magnifySize);
+        painter.setBrush(QColor("#ffffff"));
+        painter.drawRect(magnifySize/2, magnifySize/2, 3, 3);
+        ui->magnifyLabel->setPixmap(magnifyPixmap);
+    }
 }
 

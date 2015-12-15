@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>300</width>
-    <height>117</height>
+    <width>287</width>
+    <height>244</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -46,14 +46,25 @@
     </layout>
    </item>
    <item>
-    <widget class="QLabel" name="laColor">
-     <property name="text">
-      <string>颜色</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QLabel" name="laColor">
+       <property name="text">
+        <string>颜色</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="magnifyLabel">
+       <property name="text">
+        <string>放大区</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
