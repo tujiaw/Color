@@ -16,6 +16,9 @@ public:
     explicit Dialog(QWidget *parent = 0);
     ~Dialog();
 
+protected:
+    void keyPressEvent(QKeyEvent *);
+
 private:
     QString clr2rgb(QColor clr);
     QString clr2hex(QColor clr);

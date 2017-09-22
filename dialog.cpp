@@ -18,6 +18,19 @@ Dialog::~Dialog()
     delete ui;
 }
 
+void Dialog::keyPressEvent(QKeyEvent *e)
+{
+    QDialog::keyPressEvent(e);
+    if (e->modifiers() & Qt::ControlModifier) {
+        if (e->key() == Qt::Key_S) {
+            emit ui->pbPickColorStart->clicked();
+            ui->pbPickColorStart->setFocus();
+        } else if (e->key() == Qt::Key_D) {
+            emit ui->pbPickColorStop->clicked();
+            ui->pbPickColorStop->setFocus();
+        }
+    }
+}
 
 void Dialog::on_leRgb_returnPressed()
 {

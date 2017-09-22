@@ -74,7 +74,7 @@
         <enum>Qt::NoFocus</enum>
        </property>
        <property name="text">
-        <string>开始拾色&amp;S</string>
+        <string>开始拾色(Ctrl+S)</string>
        </property>
       </widget>
      </item>
@@ -84,7 +84,7 @@
         <enum>Qt::NoFocus</enum>
        </property>
        <property name="text">
-        <string>停止拾色&amp;D</string>
+        <string>停止拾色(Ctrl+D)</string>
        </property>
       </widget>
      </item>
